@@ -4,8 +4,8 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 import os
+from aiohttp import web
 
-# Берем токен из безопасных настроек сервера, а не пишем в коде
 API_TOKEN = os.getenv("BOT_TOKEN", "8811648835:AAGguuEZgU4rKVcfky6sxI0naAOdUNZQQXQ")
 
 logging.basicConfig(level=logging.INFO)
@@ -42,8 +42,24 @@ async def process_callbacks(callback: types.CallbackQuery):
         await callback.message.answer("💎 *PRO-режим всего за $4.99/мес:* Безлимитные генерации сценариев и секретные тренды.")
     await callback.answer()
 
+# Хэндлер для обхода проверки Render (заглушка веб-страницы)
+async def handle(request):
+    return web.Response(text="Bot is running")
+
 async def main():
-    await dp.start_polling(bot)
+    # Запуск фейкового веб-сервера для Render на порту, который он просит
+    app = web.Application()
+    app.router.add_get('/', handle)
+    runner = web.AppRunner(app)
+    await runner.setup()
+    port = int(os.getenv("PORT", 80).split(":")[0])
+    site = web.TCPSite(runner, '0.0.0.0', port)
+    
+    # Запускаем параллельно веб-сервер и бота
+    await asyncio.gather(
+        site.start(),
+        dp.start_polling(bot)
+    )
 
 if __name__ == '__main__':
     asyncio.run(main())
