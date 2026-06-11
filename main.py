@@ -1,10 +1,4 @@
-import logging
-import asyncio
-from aiogram import Bot, Dispatcher, types
-from aiogram.filters import Command
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-import os
-from aiohttp import web
+web
 
 API_TOKEN = os.getenv("BOT_TOKEN", "8811648835:AAGguuEZgU4rKVcfky6sxI0naAOdUNZQQXQ")
 
@@ -14,9 +8,7 @@ dp =
 
 def get_main_menu():
     return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="🔥 Радар трендов & Мемы", callback_data="trends")],
-        [InlineKeyboardButton(text="🎬 Сгенерировать сценарий", callback_data="generate_script")],
-        [InlineKeyboardButton(text="💰 Как монетизировать контент", callback_data="monetization")],
+        [InlineKeyboardButton(text="🔥 ", callback_data="monetization")],
         [InlineKeyboardButton(text="💎 PRO-аккаунт (Подписка)", callback_data="buy_pro")]
     ])
 
@@ -42,24 +34,4 @@ async def process_callbacks(callback: types.CallbackQuery):
         await callback.message.answer("💎 *PRO-режим всего за $4.99/мес:* Безлимитные генерации сценариев и секретные тренды.")
     await callback.answer()
 
-# Хэндлер для обхода проверки Render (заглушка веб-страницы)
-async def handle(request):
-    return web.Response(text="Bot is running")
-
-async def main():
-    # Запуск фейкового веб-сервера для Render на порту, который он просит
-    app = web.Application()
-    app.router.add_get('/', handle)
-    runner = web.AppRunner(app)
-    await runner.setup()
-    port = int(os.getenv("PORT", 80).split(":")[0])
-    site = web.TCPSite(runner, '0.0.0.0', port)
-    
-    # Запускаем параллельно веб-сервер и бота
-    await asyncio.gather(
-        site.start(),
-        dp.start_polling(bot)
-    )
-
-if __name__ == '__main__':
-    asyncio.run(main())
+# Хэндлер для обхода проверки Render (
