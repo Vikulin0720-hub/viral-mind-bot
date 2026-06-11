@@ -10,7 +10,7 @@ API_TOKEN = os.getenv("BOT_TOKEN", "8811648835:AAGguuEZgU4rKVcfky6sxI0naAOdUNZQQ
 
 logging.basicConfig(level=logging.INFO)
 bot = Bot(token=API_TOKEN)
-dp = Dispatcher()
+dp = 
 
 def get_main_menu():
     return InlineKeyboardMarkup(inline_keyboard=[
